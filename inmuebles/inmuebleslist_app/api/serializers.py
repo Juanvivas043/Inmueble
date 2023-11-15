@@ -1,10 +1,16 @@
 from rest_framework import serializers
-from inmuebleslist_app.models import Edificacion, Empresa
+from inmuebleslist_app.models import Edificacion, Empresa, Comentario
+
+
+class ComentarioSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comentario
+        fields = "__all__"
 
 
 
-
-class EdificacionSerializer(serializers.ModelSerializer):    
+class EdificacionSerializer(serializers.ModelSerializer):
+    comentarios = ComentarioSerializer(many=True, read_only=True)    
     class Meta: 
         model = Edificacion
         fields = "__all__"
@@ -29,15 +35,16 @@ class EdificacionSerializer(serializers.ModelSerializer):
     #             raise serializers.ValidationError('La descripcion no puede ser un numero')
 
 
-class EmpresaSerializer(serializers.ModelSerializer):
-    #edificacionlist = EdificacionSerializer(many=True, read_only=True)\
+class EmpresaSerializer(serializers.HyperlinkedModelSerializer):
+    edificacionlist = EdificacionSerializer(many=True, read_only=True)
+
     #edificacionlist = serializers.StringRelatedField(many=True)
     #edificacionlist = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    edificacionlist = serializers.HyperlinkedRelatedField(
-        many=True, 
-        read_only=True,
-        view_name='edificacion_detalle'
-        )
+    #*edificacionlist = serializers.HyperlinkedRelatedField(
+    #   many=True, 
+    #   read_only=True,
+    #   view_name='edificacion_detalle'
+    #    )
 
 
     
@@ -46,8 +53,9 @@ class EmpresaSerializer(serializers.ModelSerializer):
         fields = "__all__"
         
         
-    
-    
+        
+        
+
 
 
 # def colum_longitud(value):
