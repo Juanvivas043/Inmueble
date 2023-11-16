@@ -13,3 +13,5 @@ menv\Scripts\activate
 
 --Comando para hostear la app 
 python manage.py runserver
+
+--Juan
