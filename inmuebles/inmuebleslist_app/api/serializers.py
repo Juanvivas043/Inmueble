@@ -37,7 +37,7 @@ class EdificacionSerializer(serializers.ModelSerializer):
     #             raise serializers.ValidationError('La descripcion no puede ser un numero')
 
 
-class EmpresaSerializer(serializers.HyperlinkedModelSerializer):
+class EmpresaSerializer(serializers.ModelSerializer):
     edificacionlist = EdificacionSerializer(many=True, read_only=True)
 
     #edificacionlist = serializers.StringRelatedField(many=True)
