@@ -20,4 +20,7 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('tienda/', include('inmuebleslist_app.api.urls')),
+    
+    #agrega un login propio del framework
+    path('api-auth', include('rest_framework.urls')),
 ]
