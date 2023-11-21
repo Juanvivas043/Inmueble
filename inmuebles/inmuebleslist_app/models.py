@@ -21,6 +21,8 @@ class Edificacion(models.Model):
     descripcion = models.CharField(max_length=500)
     imagen = models.CharField(max_length=900)
     active = models.BooleanField(default=True)
+    avg_calificacion = models.FloatField(default=0)
+    number_calificacion = models.IntegerField(default=0)
     empresa = models.ForeignKey(Empresa, on_delete=models.CASCADE, related_name="edificacionlist")
     created = models.DateTimeField(auto_now_add=True)
     
@@ -29,7 +31,7 @@ class Edificacion(models.Model):
     
 class Comentario(models.Model):
     comentario_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    calficacion = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
+    calificacion = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     texto = models.CharField(max_length=200, null=True)
     active = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)

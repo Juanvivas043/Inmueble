@@ -9,12 +9,15 @@ from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
+from inmuebleslist_app.api.permissions import AdminOrReadOnly, ComentarioUserOrReadOnly
 
 
 #Manera mas generica
 class ComentarioList(generics.ListAPIView):
     #queryset = Comentario.objects.all()
     serializer_class = ComentarioSerializer
+    permission_classes = [IsAuthenticated]
+    
     
     def get_queryset(self):
         pk = self.kwargs['pk']
@@ -24,6 +27,7 @@ class ComentarioList(generics.ListAPIView):
 class ComentarioDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comentario.objects.all()
     serializer_class = ComentarioSerializer
+    permission_classes = [ComentarioUserOrReadOnly]
 
 class ComentarioCreate(generics.CreateAPIView):
     serializer_class = ComentarioSerializer
@@ -40,6 +44,14 @@ class ComentarioCreate(generics.CreateAPIView):
          
         if comentario_queryset.exists():
             raise ValidationError("El usuario ya escribio un comentario para este inmueble")
+        
+        if inmueble.number_calificacion == 0:
+            inmueble.avg_calificacion = serializer.validated_data['calificacion']
+        else: 
+            inmueble.avg_calificacion = (serializer.validated_data['calificacion'] + inmueble.avg_calificacion)/2
+            
+        inmueble.number_calificacion = inmueble.number_calificacion + 1
+        inmueble.save()
 
         serializer.save(edificacion=inmueble, comentario_user=user)
         
@@ -160,7 +172,7 @@ class EdificacionDetalleAV(APIView):
 
 class EmpresaVS(viewsets.ModelViewSet):
     
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AdminOrReadOnly]
     queryset = Empresa.objects.all()
     serializer_class = EmpresaSerializer
 
